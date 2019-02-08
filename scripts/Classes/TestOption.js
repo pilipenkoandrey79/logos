@@ -15,8 +15,8 @@ var TestOption = core.define(
         type: 'radio',
         name: this.description.name,
         value: this.description.value,
-      }
-
+      };
+      
       this.$el = document.createElement('input');
       label.innerHTML = this.description.title;
 
