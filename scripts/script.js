@@ -1,6 +1,7 @@
 window.onload = function() {
   var questions = [
     {
+      name: 'q1',
       description: 'Question 1',
       options: [
         { title: 'option 1', correct: true, },
@@ -9,6 +10,7 @@ window.onload = function() {
       ]
     },
     {
+      name: 'q5',
       description: 'Question 2',
       options: [
         { title: 'option 1', },
@@ -17,6 +19,7 @@ window.onload = function() {
       ]
     },
     {
+      name: 'q7',
       description: 'Question 3',
       options: [
         { title: 'option 1', },
@@ -26,27 +29,18 @@ window.onload = function() {
     },
   ];
   
-  function checkTest() {
-    var correctQuestions = [];
-    
-    test.forEach(function(question){
-      if (question.check()) {
-        correctQuestions.push(question.getQuestion());
-      }
-    });
-    
-    alert('You answered right on questions:\n\n' + correctQuestions.join('\n'));
-  }
+  var $app = document.getElementById('app');
 
-  var $root = document.getElementById('app');
-
-  var test = questions.map(function(question, index){
-    return (new TestQuestion($root, question, index))
-      .render();
-  });
+  Test.render($app, questions);
   
   var button = document.createElement('button');
   button.innerHTML = 'Test';
-  button.addEventListener('click', checkTest);
-  $root.appendChild(button);
+  
+  button.addEventListener('click', function(){
+    var answered = Test.check();
+    
+    alert('You answered on ' + answered.length + ' questions.\n' + answered.join('\n'));
+  });
+
+  $app.appendChild(button);
 };
