@@ -1,0 +1,13 @@
+{
+  "name": "logos",
+  "version": "1.0.0",
+  "description": "test application",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "lodash": "^4.17.11"
+  }
+}

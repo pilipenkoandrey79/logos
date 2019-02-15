@@ -1,4 +1,5 @@
 var http = require('http');
+var _ = require('lodash');
 
 var server  = http.createServer(function(request, response){
 
@@ -17,11 +18,23 @@ var server  = http.createServer(function(request, response){
         ]
     };
 
-    var template = '';
-    
+    var template = `
+    <!DOCTYPE html>
+        <html lang="en">
+        <head>
+        <meta charset="UTF-8">
+        <title>Test</title>
+        </head>
+        <body>
+            <div class="container">
+                <h1><%- name %> <%- surname %></h1>
+            </div>
+        </body>
+    </html>`;
+
     response.statusCode = 200;
     response.setHeader('Content-Type', 'text/html');
-    response.write(user);
+    response.write(_.template(template)({user: user}));
     response.end();
 });
 
