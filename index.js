@@ -2,24 +2,9 @@ var http = require('http');
 var _ = require('lodash');
 
 var template = require('./templates');
+var user = require('./models/user');
 
 var server  = http.createServer(function(request, response){
-
-    var user = {
-        name: 'Andrii',
-        surname: 'Sidorenko',
-        projects: [
-            {
-                title: 'project1',
-                started: (new Date()).setMonth(0).toLocaleString()
-            },
-            {
-                title: 'project2',
-                started: (new Date()).setMonth(1).toLocaleString()
-            },
-        ]
-    };
-
     response.statusCode = 200;
     response.setHeader('Content-Type', 'text/html');
     response.end(_.template(template)(user));
