@@ -8,6 +8,12 @@ module.exports = `
       <body>
           <div class="container">
               <h1><%- name %> <%- surname %></h1>
+
+              <ul>
+              <% for (var i in projects) { %>
+                <li><%- projects[i].title %>. Started: <%- projects[i].started %></li>
+              <% } %>
+              </ul>
           </div>
       </body>
   </html>`;
