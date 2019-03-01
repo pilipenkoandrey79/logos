@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import moment from 'moment';
 
 import './App.css';
 import List from './List';
@@ -31,8 +30,7 @@ class App extends Component {
     render() {
         return (
             <div>
-                <p>Hello, world! { moment().format('LLL') }</p>
-            <List items={items} ordered={false} />
+                <List items={items} ordered={false} />
             </div>
         );
     }
