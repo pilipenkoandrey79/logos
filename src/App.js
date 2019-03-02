@@ -1,38 +1,19 @@
 import React, { Component } from 'react';
 
-import './App.css';
 import List from './List';
 
 const items = [
-    { label: 'item1', },
-    { label: 'item2', },
-    { label: 'item3', },
-    { label: 'item4', },
-    { label: 'item5', },
-    { label: 'item6', },
+    { label: 'item1', id: 7 },
+    { label: 'item2', id: 9 },
+    { label: 'item3', id: 12 },
+    { label: 'item4', id: 78 },
+    { label: 'item5', id: 2 },
+    { label: 'item6', id: 33 },
 ];
-
-// const App = () => <p>Hello, world! {
-//     moment().format('LLL')
-// }</p>;
-
-
-// Functional component
-//
-// const App = function() {
-//     return (<p>Hello, world! {
-//         moment().format('LLL')
-//     }</p>);
-// };
-
 
 class App extends Component {
     render() {
-        return (
-            <div>
-                <List items={items} ordered={false} />
-            </div>
-        );
+        return <List items={items} />
     }
 }
 
