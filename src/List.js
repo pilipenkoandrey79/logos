@@ -10,6 +10,11 @@
 import React, { Component, createRef } from 'react';
 
 /**
+ * підключаємо axios
+ */
+import axios from 'axios';
+
+/**
  * пвдключаємо таблицю стилів
  */
 import './List.css';
@@ -28,7 +33,7 @@ class List extends Component {
          * складові частини стану та надати їм початкове значення
          */
         this.state = {
-            items: this.props.items,
+            items: [],
             active: null,
         };
 
@@ -43,6 +48,25 @@ class List extends Component {
          */
         this.addItem = this.addItem.bind(this);
         this.delItem = this.delItem.bind(this);
+    }
+
+    /**
+     * метод життєвого циклу компоненту: викликається кожного разу, після того, як компонент вставлено в DOM сторінки
+     * Це найкраще місце, щоб "сходити" за даними, які ви плануєте показати в компоненті.
+     */
+    componentDidMount() {
+        /**
+         * метод axios.get працює асинхронно, та повертає promise, який треба обробити в функції then
+         */
+        axios.get('http://localhost:3333')
+            /**
+             * вхідним параметром функції then буде тіло відповіді, що прийшла з мережі зі статусом 20x
+             */
+             .then(response => this.setState({ items: response.data }))
+             /**
+              * вхідним параметром функції catch буде тіло відповіді, що прийшла з мережі зі статусом 40x або 50x
+              */
+             .catch(error => console.error(error));
     }
 
     /**
