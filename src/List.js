@@ -35,6 +35,7 @@ class List extends Component {
         this.state = {
             items: [],
             active: null,
+            loading: false,
         };
 
         /**
@@ -48,6 +49,7 @@ class List extends Component {
          */
         this.addItem = this.addItem.bind(this);
         this.delItem = this.delItem.bind(this);
+        this.save = this.save.bind(this);
     }
 
     /**
@@ -55,6 +57,7 @@ class List extends Component {
      * Це найкраще місце, щоб "сходити" за даними, які ви плануєте показати в компоненті.
      */
     componentDidMount() {
+        this.setState({ loading: true });
         /**
          * метод axios.get працює асинхронно, та повертає promise, який треба обробити в функції then
          */
@@ -62,7 +65,7 @@ class List extends Component {
             /**
              * вхідним параметром функції then буде тіло відповіді, що прийшла з мережі зі статусом 20x
              */
-             .then(response => this.setState({ items: response.data }))
+             .then(response => this.setState({ items: response.data, loading: false }))
              /**
               * вхідним параметром функції catch буде тіло відповіді, що прийшла з мережі зі статусом 40x або 50x
               */
@@ -117,11 +120,19 @@ class List extends Component {
         this.setState({ items });
     }
 
+    save() {
+        this.setState({ loading: true });
+
+        axios.post('http://localhost:3333', this.state.items)
+             .then(response => this.setState({ loading: false }))
+             .catch(error => console.error(error));
+    }
+
     /**
      * головна функція відмальовки компоненту
      */
     render() {
-        const { items, active } = this.state;
+        const { items, active, loading } = this.state;
 
         return (
             <div className="editable-list">
@@ -131,22 +142,29 @@ class List extends Component {
                         <button className="btn btn-outline-secondary" type="button" onClick={this.addItem}>Add</button>
                     </div>
                 </div>
-                <ul className="list-group">
-                {
-                    items.map(item => (
-                        <li
-                            className={`list-group-item${active === item.id ? ' active' : ''}`}
-                            key={item.id}
-                            onClick={e => this.setState({ active: item.id })}
-                        >
-                            <span>
-                                {item.label}
-                                <button onClick={e => this.delItem(item.id)}>&#x2715;</button>
-                            </span>
-                        </li>)
-                    )
+                {!loading &&
+                <div>
+                    <ul className="list-group">
+                    {
+                        items.map(item => (
+                            <li
+                                className={`list-group-item${active === item.id ? ' active' : ''}`}
+                                key={item.id}
+                                onClick={e => this.setState({ active: item.id })}
+                            >
+                                <span>
+                                    {item.label}
+                                    <button onClick={e => this.delItem(item.id)}>&#x2715;</button>
+                                </span>
+                            </li>)
+                        )
+                    }
+                    </ul>
+                    <div>
+                        <button type="button" onClick={this.save}>Save</button>
+                    </div>
+                </div>
                 }
-                </ul>
             </div>
         );
     }
