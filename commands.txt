@@ -1,8 +1,0 @@
-node /folder/subfolder/file.js - запустити файл на виконання
-
-npm - Node Package Manager (https://flaviocopes.com/npm/)
-
-npm init - створення проекту в локальній папці.
-           Буде згенеровано файл package.json
-
-npm install %module_name%
