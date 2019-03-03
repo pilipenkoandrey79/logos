@@ -19,6 +19,13 @@ import axios from 'axios';
  */
 import './List.css';
 
+const API_BASE_URL = 'http://localhost:3333';
+
+const apiPaths = {
+    fetch: 'getAll',
+    new: 'create',
+}
+
 class List extends Component {
 
     /**
@@ -49,7 +56,6 @@ class List extends Component {
          */
         this.addItem = this.addItem.bind(this);
         this.delItem = this.delItem.bind(this);
-        this.save = this.save.bind(this);
     }
 
     /**
@@ -61,7 +67,7 @@ class List extends Component {
         /**
          * метод axios.get працює асинхронно, та повертає promise, який треба обробити в функції then
          */
-        axios.get('http://localhost:3333')
+        axios.get(`${API_BASE_URL}/${apiPaths.fetch}`)
             /**
              * вхідним параметром функції then буде тіло відповіді, що прийшла з мережі зі статусом 20x
              */
@@ -89,15 +95,27 @@ class List extends Component {
         /** вираховуємо максимальне наявне значення id */
         const maxId = items.reduce((max, item) => { return item.id > max ? item.id : max; }, 0);
 
-        /**
-         * 2. Змінюємо змінну, яку хочемо перезаписати в стані
-         */
-        items.push({ label: inputField.value, id: (maxId + 1) });
+        const newItem = {
+            label: inputField.value,
+            id: (maxId + 1)
+        };
 
-        /**
-         * 3. Записуємо змінену змінну в стан поверх старої
-         */
-        this.setState({ items });
+        axios.post(`${API_BASE_URL}/${apiPaths.new}`, newItem)
+             .then(response => {
+                /**
+                 * 2. Змінюємо змінну, яку хочемо перезаписати в стані
+                 */
+                items.push(newItem);
+
+                /**
+                 * 3. Записуємо змінену змінну в стан поверх старої
+                 */
+                this.setState({ items });
+             })
+             .catch(error => {
+                console.error(error);
+             })
+        
         inputField.value = null;
     }
 
@@ -114,18 +132,22 @@ class List extends Component {
         const indexToDel = items.findIndex(item => item.id === id);
 
         if (indexToDel >= 0) {
-            items.splice(indexToDel, 1);
+            axios.delete(`${API_BASE_URL}/${id}`)
+             .then(response => {
+                /**
+                 * 2. Змінюємо змінну, яку хочемо перезаписати в стані
+                 */
+                items.splice(indexToDel, 1);
+
+                /**
+                 * 3. Записуємо змінену змінну в стан поверх старої
+                 */
+                this.setState({ items });
+             })
+             .catch(error => {
+                console.error(error);
+             })
         }
-
-        this.setState({ items });
-    }
-
-    save() {
-        this.setState({ loading: true });
-
-        axios.post('http://localhost:3333', this.state.items)
-             .then(response => this.setState({ loading: false }))
-             .catch(error => console.error(error));
     }
 
     /**
@@ -143,27 +165,22 @@ class List extends Component {
                     </div>
                 </div>
                 {!loading &&
-                <div>
-                    <ul className="list-group">
-                    {
-                        items.map(item => (
-                            <li
-                                className={`list-group-item${active === item.id ? ' active' : ''}`}
-                                key={item.id}
-                                onClick={e => this.setState({ active: item.id })}
-                            >
-                                <span>
-                                    {item.label}
-                                    <button onClick={e => this.delItem(item.id)}>&#x2715;</button>
-                                </span>
-                            </li>)
-                        )
-                    }
-                    </ul>
-                    <div>
-                        <button type="button" onClick={this.save}>Save</button>
-                    </div>
-                </div>
+                <ul className="list-group">
+                {
+                    items.map(item => (
+                        <li
+                            className={`list-group-item${active === item.id ? ' active' : ''}`}
+                            key={item.id}
+                            onClick={e => this.setState({ active: item.id })}
+                        >
+                            <span>
+                                {item.label}
+                                <button onClick={e => this.delItem(item.id)}>&#x2715;</button>
+                            </span>
+                        </li>)
+                    )
+                }
+                </ul>
                 }
             </div>
         );
