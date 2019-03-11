@@ -1,8 +1,0 @@
-.list-group-item {
-    cursor: pointer;
-}
-
-.list-group-item span {
-    display: flex;
-    justify-content: space-between;
-}
